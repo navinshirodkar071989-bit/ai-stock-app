@@ -1,0 +1,2 @@
+# ai-stock-app
+Stocks
