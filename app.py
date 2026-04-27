@@ -69,10 +69,15 @@ def fetch_data(stocks):
 data = fetch_data(stocks)
 
 # -----------------------------
-# MARKET FILTER (NIFTY)
+# MARKET FILTER (FIXED)
 # -----------------------------
 nifty = yf.download("^NSEI", period="5d", interval="1d", progress=False)
-market_up = nifty['Close'].iloc[-1] > nifty['Close'].iloc[-2]
+
+try:
+    nifty_close = nifty['Close'].dropna()
+    market_up = bool(nifty_close.iloc[-1] > nifty_close.iloc[-2])
+except:
+    market_up = True  # fallback (avoid crash)
 
 if market_up:
     st.success("📈 Market Trend: Bullish")
@@ -90,7 +95,7 @@ def rsi(df, window=14):
     return 100 - (100 / (1 + rs))
 
 # -----------------------------
-# SESSION STATE (NO DUPLICATE ALERTS)
+# SESSION STATE
 # -----------------------------
 if "alerted" not in st.session_state:
     st.session_state.alerted = set()
