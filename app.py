@@ -53,13 +53,13 @@ stocks = list(set(nifty100 + extra))
 st.write(f"📊 Tracking {len(stocks)} stocks")
 
 # -----------------------------
-# FETCH DATA
+# FETCH DATA (FIXED)
 # -----------------------------
 @st.cache_data(ttl=180)
 def fetch_data(stocks):
     return yf.download(
         stocks,
-        period="2mo",
+        period="6mo",   # FIXED HERE
         interval="1d",
         group_by='ticker',
         threads=True,
@@ -77,7 +77,7 @@ try:
     nifty_close = nifty['Close'].dropna()
     market_up = bool(nifty_close.iloc[-1] > nifty_close.iloc[-2])
 except:
-    market_up = True  # fallback (avoid crash)
+    market_up = True
 
 if market_up:
     st.success("📈 Market Trend: Bullish")
